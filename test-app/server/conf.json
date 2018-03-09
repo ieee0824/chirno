@@ -1,0 +1,9 @@
+{
+    "backend_url": "http://localhost:8081",
+    "command": [
+        "go",
+        "run",
+        "test-server.go"
+    ],
+    "port": "8080"
+}

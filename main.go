@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -64,7 +65,9 @@ func runTargetProcess(cnf *Config) error {
 }
 
 func main() {
-	f, err := os.Open("./conf.json")
+	fileName := flag.String("f", "./conf.json", "conf file name")
+	flag.Parse()
+	f, err := os.Open(*fileName)
 	if err != nil {
 		log.Fatalln("can not read conf.json")
 	}
