@@ -2,6 +2,11 @@
 
 `chirno` provides health_api for any application.
 
+# installation
+```
+$ go get github.com/ieee0824/chirno
+```
+
 # configuration
 using json.
 
