@@ -1,6 +1,6 @@
 # chirno
 
-`chirno` provides health_api for any application.
+`chirno` provides health_api for any application.
 
 # configuration
 using json.
