@@ -44,14 +44,14 @@ api's listen port.
 
 ```json
 {
-    "backend_url": "http://localhost:8081",
+    "backend_url": "http://localhost:8080",
     "command": [
         "writing",
         "exec",
         "command",
         "options"
     ],
-    "port": "8080"
+    "port": "9090"
 }
 ```
 
