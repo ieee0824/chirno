@@ -60,6 +60,8 @@ func runTargetProcess(cnf *Config) error {
 	} else {
 		cmd = exec.Command(cnf.Command[0], cnf.Command[1:]...)
 	}
+	cmd.Stderr = os.Stderr
+	cmd.Stdout = os.Stdout
 
 	return cmd.Run()
 }
