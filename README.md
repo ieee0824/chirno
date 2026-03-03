@@ -1,7 +1,5 @@
 # chirno
 
-`chirno` provides health_check api for any application.
-
 ```
 　　　　／^? 　 　 　,.へ___
 　　　/　　　＞''´￣￣｀'''ヽ7
@@ -11,9 +9,9 @@
 　 └ｒｲ　レｲ 　 ┃　　┃　|　　 ｎ⌒i
 　　く_ﾉ　 〉　i　　 　　 　 　 iﾊ _,,.!　ノ
 　　　ﾊ.　i　ハ､ 　 　o　 　 人|´　／
-　 i?ﾚﾍハﾚへ〉'=r--r='i´Vヽy'´
+　 i?ﾚﾘハﾚへ〉'=r--r='i´Vヽy'´
 　 ヽ､,_｀ヽ,r'´　｀ﾄ､ ∞」 i　　ノ
-　 ＜　 ￣〉､___ノ　 ￣　 Y／
+　＜　 ￣〉､___ノ　 ￣　 Y／
 　　　＞_/　／〉　,　 , 　 ､!_ゝ
 　 　 ｀(⊆ノ／　/　　! 　 ハ
 　　　 　　くﾍ,.へ_,.へ__,.ﾍ,.ﾍ
@@ -21,37 +19,57 @@
 　　　 　　　　ﾄ_ﾝ　　　ﾄ_ﾉ
 ```
 
-# installation
+A wrapper tool that adds a health check API (`/health_check`) to any application.
+It runs a specified command as a child process while providing an HTTP endpoint for health checking.
+Optionally acts as a reverse proxy when `backend_url` is set.
+
+[Japanese (日本語)](README.ja.md)
+
+## Installation
+
 ```
-$ go get github.com/ieee0824/chirno
+go install github.com/ieee0824/chirno@latest
 ```
 
-# configuration
-using json.
+## Usage
 
-## options
+```
+chirno -f conf.json
+```
 
-### backend_url
-Specifying this parameter operates as a reverse proxy.
+| Flag | Default | Description |
+|---|---|---|
+| `-f` | `./conf.json` | Path to config file |
 
-### command
-Execution command of the application to add health_api.
+## Configuration
 
-### port
-api's listen port.
+Uses a JSON config file.
 
-## example
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `command` | `string[]` | yes | Command and arguments to execute |
+| `port` | `string` | yes | Port for chirno to listen on |
+| `backend_url` | `string` | no | Enables reverse proxy when set |
+
+### Example: Add health check to an application
 
 ```json
 {
-    "backend_url": "http://localhost:8080",
-    "command": [
-        "writing",
-        "exec",
-        "command",
-        "options"
-    ],
+    "command": ["go", "run", "app.go"],
     "port": "9090"
 }
 ```
 
+`GET /health_check` returns `It works!`.
+
+### Example: Reverse proxy + health check
+
+```json
+{
+    "backend_url": "http://localhost:8080",
+    "command": ["go", "run", "server.go"],
+    "port": "9090"
+}
+```
+
+Requests other than `/health_check` are forwarded to `backend_url`.
