@@ -18,9 +18,9 @@ type Config struct {
 	Port       string   `json:"port"`
 }
 
-type HelathChecker struct{}
+type HealthChecker struct{}
 
-func (h *HelathChecker) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *HealthChecker) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "It works!")
 }
 
@@ -32,18 +32,11 @@ func genProxy(cnf *Config) *httputil.ReverseProxy {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	director := func(request *http.Request) {
-		url := *request.URL
-		url.Scheme = u.Scheme
-		url.Host = u.Host
-		req, err := http.NewRequest(request.Method, url.String(), request.Body)
-		if err != nil {
-			log.Fatal(err.Error())
-		}
-		req.Header = request.Header
-		*request = *req
+	return &httputil.ReverseProxy{
+		Rewrite: func(pr *httputil.ProxyRequest) {
+			pr.SetURL(u)
+		},
 	}
-	return &httputil.ReverseProxy{Director: director}
 }
 
 func runTargetProcess(cnf *Config) error {
@@ -85,7 +78,7 @@ func main() {
 		os.Exit(0)
 	}(cnf)
 
-	http.Handle("/health_check", &HelathChecker{})
+	http.Handle("/health_check", &HealthChecker{})
 	proxy := genProxy(cnf)
 	if proxy != nil {
 		http.Handle("/", proxy)
